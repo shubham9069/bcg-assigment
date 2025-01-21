@@ -12,6 +12,14 @@ services:
       MYSQL_DATABASE: bcg-data-base
     volumes:
       - mysql-data:/var/lib/mysql
+    command: >
+      bash -c "
+      mysqld --innodb-temp-data-file-path=ibtmp1:12M:autoextend:max:1024M --daemonize &&
+      sleep 5 &&
+      echo 'CREATE DATABASE IF NOT EXISTS \`bcg-data-base\`;' | mysql -u root -ppassword &&
+      mysqladmin shutdown -u root -ppassword &&
+      mysqld --innodb-temp-data-file-path=ibtmp1:12M:autoextend:max:1024M
+      "
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-ppassword"]
       interval: 3s      # Check every 10 seconds
@@ -26,18 +34,16 @@ services:
     image: flask-app
     container_name: flask-app
     ports:
-      - "127.0.0.1:5001:5000"
+      - "0.0.0.0:5001:5000"
     environment:
       DATABASE_URL: mysql+pymysql://root:password@mysql-server:3306/bcg-data-base
     depends_on:
       mysql-server:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:5001/health"]
-      interval: 3s      # Check every 10 seconds
-      timeout: 3s        # Timeout after 5 seconds
-      retries: 30        # Retry 3 times before marking as unhealthy
-      start_period: 3s   
+    command: >
+      bash -c "
+      sleep 10 && flask run --host=0.0.0.0 --port=5000
+      "
 
   frontend:
     build:
@@ -46,10 +52,12 @@ services:
     image: frontend
     container_name: frontend
     ports:
-      - "127.0.0.1:3001:3000"
+      - "0.0.0.0:3001:3000"
     depends_on:
       flask-app:
-        condition: service_healthy 
+        condition: service_started
+    command: 
+      npm start
 
 volumes:
   mysql-data:
