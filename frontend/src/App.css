@@ -1,0 +1,71 @@
+/* PAGE CSS */
+
+/* page/dashboard */
+
+
+.dashboard {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+
+
+  /* create manage product  */
+  .manage-product-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .actions-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 0 auto;
+    outline: none;
+  }
+  
+  .modal-form .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .forecast-button >button{
+    background-color: rgb(41, 94, 229) !important;
+    color: white !important;
+    cursor: pointer !important;
+  }
+  
+  
