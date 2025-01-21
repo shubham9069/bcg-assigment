@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import { BASE_URL } from '../../config';
 import './Auth.css';
@@ -24,7 +25,8 @@ const Signup = () => {
           setRoles(response.data?.data);
         }
       } catch (error) {
-        console.error('Error fetching roles:', error);
+        const errorMessage = error?.response?.data?.message || 'Failed to fetch roles';
+        toast.error(errorMessage);
       }
     };
 
@@ -41,7 +43,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match!");
+      toast.error("Passwords don't match!");
       return;
     }
 
@@ -58,12 +60,12 @@ const Signup = () => {
       });
  
       if (response.status === 201) {
-        console.log('Signup successful:', response.data);
+        toast.success('Signup successful! Please login.');
         navigate('/login');
       }
     } catch (error) {
-      console.error('Error during signup:', error);
-      alert('Signup failed. Please try again., ' + error?.response?.data?.message);
+      const errorMessage = error?.response?.data?.message || 'Signup failed. Please try again.';
+      toast.error(errorMessage);
     }
   };
 

@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import CreateManageProduct from './pages/CreateManageProduct';
 import Login from './pages/auth/Login';
 import Signup from './pages/auth/Signup';
+import LandingPage from './pages/LandingPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './App.css';
 import PriceOptimizer from './pages/PriceOptimizer';
@@ -28,6 +29,10 @@ const ProtectedRoute = ({ children }) => {
 function AppRoutes() {
   return (
     <Routes>
+      {/* Public Route */}
+      <Route path="/" element={<LandingPage />} />
+
+      {/* Auth Routes */}
       <Route
         path="/login"
         element={
@@ -70,9 +75,6 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
-
-      {/* Redirect root to login */}
-      <Route path="/" element={<Navigate to="/login" />} />
     </Routes>
   );
 }

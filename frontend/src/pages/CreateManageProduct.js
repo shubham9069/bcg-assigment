@@ -8,6 +8,7 @@ import DemandForecastModal from "../components/DemandForecastModal/DemandForecas
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { BASE_URL } from "../config";
+import { toast } from 'react-toastify';
 
 const CreateManageProduct = () => {
   const { token } = useAuth();
@@ -139,7 +140,6 @@ const CreateManageProduct = () => {
   // Fetch products from API
   const fetchProducts = async (search = "", category_id = 0) => {
     try {
-        
       const response = await axios.get(`${BASE_URL}/api/products`, {
         params: { search, category_id },
         headers: {
@@ -150,7 +150,8 @@ const CreateManageProduct = () => {
         setProducts(response.data?.data);
       }
     } catch (error) {
-      console.error("Error fetching products:", error);
+      const errorMessage = error?.response?.data?.message || 'Error fetching products';
+      toast.error(errorMessage);
     }
   };
 
@@ -167,7 +168,8 @@ const CreateManageProduct = () => {
         setNewProduct({...newProduct, category_id: response.data?.data[0].category_id});
       }
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      const errorMessage = error?.response?.data?.message || 'Error fetching categories';
+      toast.error(errorMessage);
     }
   };
 
@@ -207,36 +209,37 @@ const CreateManageProduct = () => {
         },
       });
       if (response.status === 201) {
-        setProducts([...products,response.data?.data]);
-        toggleAddModal(); // Close the modal
+        setProducts([...products, response.data?.data]);
+        toast.success('Product added successfully!');
+        toggleAddModal();
       }
     } catch (error) {
-      console.error("Error adding product:", error);
+      const errorMessage = error?.response?.data?.message || 'Error adding product';
+      toast.error(errorMessage);
     }
   };
 
   const handleDelete = async (product_id) => {
     try {
-        const response = await axios.delete(`${BASE_URL}/api/products/${product_id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        if (response.status === 200) {
-            setProducts(products.filter(product => product.product_id !== product_id));
-            console.log(`Product with ID ${product_id} deleted successfully.`);
-        }
+      const response = await axios.delete(`${BASE_URL}/api/products/${product_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        setProducts(products.filter(product => product.product_id !== product_id));
+        toast.success('Product deleted successfully!');
+      }
     } catch (error) {
-        alert(error.response.data?.message);
-        console.error("Error deleting product:", error);
+      const errorMessage = error?.response?.data?.message || 'Error deleting product';
+      toast.error(errorMessage);
     }
   };
 
   const editProduct = async () => {
     try {
       const updatedProduct = {
-        ...newProduct, 
-        
+        ...newProduct,
       };
 
       const response = await axios.put(`${BASE_URL}/api/products/${updatedProduct?.product_id}`, updatedProduct, {
@@ -247,15 +250,15 @@ const CreateManageProduct = () => {
       });
 
       if (response.status === 200) {
-        
         setProducts(products.map(product => 
           product.product_id === updatedProduct?.product_id ? response.data?.data : product
         ));
-        console.log(`Product with ID ${updatedProduct?.product_id} updated successfully.`);
-        toggleAddModal(); // Close the modal
+        toast.success('Product updated successfully!');
+        toggleAddModal();
       }
     } catch (error) {
-      console.error("Error updating product:", error);
+      const errorMessage = error?.response?.data?.message || 'Error updating product';
+      toast.error(errorMessage);
     }
   };
   const handleEdit = async (product_id) => {
@@ -265,33 +268,33 @@ const CreateManageProduct = () => {
 
 
   const handleView = async (product_id) => {
-  const response = await axios.get(`${BASE_URL}/api/products/${product_id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (response.status === 200) {
-    console.log("Product details:", response.data?.data);
-    let product_data = {
-        product_id: response.data?.data.product_id,
-        name: response.data?.data.name,
-        category_id: response.data?.data.category_id,
-        rating: response.data?.data.rating,
-        description: response.data?.data.description,
-        cost_price: response.data?.data.pricing.cost_price,
-        selling_price: response.data?.data.pricing.selling_price,
-        available_stock: response.data?.data.stock.available_stock,
-        demand_forecast: response.data?.data.pricing.demand_forecast,
-        optimized_price: response.data?.data.optimized_price.optimized_price,
+    try {
+      const response = await axios.get(`${BASE_URL}/api/products/${product_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        let product_data = {
+          product_id: response.data?.data.product_id,
+          name: response.data?.data.name,
+          category_id: response.data?.data.category_id,
+          rating: response.data?.data.rating,
+          description: response.data?.data.description,
+          cost_price: response.data?.data.pricing.cost_price,
+          selling_price: response.data?.data.pricing.selling_price,
+          available_stock: response.data?.data.stock.available_stock,
+          demand_forecast: response.data?.data.pricing.demand_forecast,
+          optimized_price: response.data?.data.optimized_price.optimized_price,
+        };
+        setNewProduct(product_data);
+        toggleAddModal();
+        setViewMode(true);
+      }
+    } catch (error) {
+      const errorMessage = error?.response?.data?.message || 'Error fetching product details';
+      toast.error(errorMessage);
     }
-    setNewProduct(product_data);
-    toggleAddModal();
-    setViewMode(true);
-    
-  } else {
-    alert(response.data?.message);
-    console.error("Error fetching product details:", response.status);
-  }
   };
   const handleAdd = () => {
     toggleAddModal();

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { BASE_URL } from '../../config';
@@ -36,11 +37,13 @@ const Login = () => {
 
       if (response.status === 200) {
         login(response?.data?.data, response?.data?.data?.token);
+        toast.success('Login successful!');
         navigate('/dashboard');
       }
     } catch (error) {
-      setError(error?.response?.data?.message || 'Login failed. Please try again.');
-      console.error('Login error:', error);
+      const errorMessage = error?.response?.data?.message || 'Login failed. Please try again.';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
