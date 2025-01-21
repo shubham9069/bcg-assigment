@@ -1,3 +1,9 @@
+
+project Video Link :-  
+```bash
+https://www.awesomescreenshot.com/video/35764742?key=8d9e01d31fd678c7baffa3661995bd08
+```
+
 You can set up this project in two ways:
 
 **NOTE: AFTER SETTING UP THE DATABASE AND BACKEND, YOU NEED TO RUN THIS CURL COMMAND:**
@@ -62,3 +68,9 @@ curl --location --request POST 'http://127.0.0.1:5001/api/initialize'
    3. `npm start`
 
    The frontend will be available at [http://127.0.0.1:3000](http://127.0.0.1:3000).
+
+   
+
+https://github.com/user-attachments/assets/a0ca782a-b82a-40ea-b739-69ff804d1101
+
+
