@@ -3,7 +3,7 @@ You can set up this project in two ways:
 **NOTE: AFTER SETTING UP THE DATABASE AND BACKEND, YOU NEED TO RUN THIS CURL COMMAND:**
 
 ```bash
-curl --location --request POST 'http://127.0.0.1:5000/api/initialize'
+curl --location --request POST 'http://127.0.0.1:5001/api/initialize'
 ```
 
 **This will initialize the database with some test data like categories, products, pricing, stock, forecasting log, optimized price, user, role, user permission, and role and permission mapping.**
